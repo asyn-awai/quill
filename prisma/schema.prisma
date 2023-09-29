@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id    String @id @unique
+    email String @unique
+    File  File[]
+
+    stripeCustomerId         String?   @unique @map("stripe_customer_id")
+    stripeSubscriptionId     String?   @unique @map("stripe_subscription_id")
+    stripePriceId            String?   @unique @map("stripe_price_id")
+    stripeCurrentPeriodStart DateTime? @map("stripe_current_period_start")
+    stripeCurrentPeriodEnd   DateTime? @map("stripe_current_period_end")
+}
+
+enum UploadStatus {
+    PENDING
+    PROCESSING
+    SUCCESS
+    FAILED
+}
+
+model File {
+    id           String       @id @unique @default(cuid())
+    name         String
+    uploadStatus UploadStatus @default(PENDING)
+    url          String
+    key          String
+    createdAt    DateTime     @default(now())
+    updatedAt    DateTime     @updatedAt
+
+    User   User?   @relation(fields: [userId], references: [id])
+    userId String?
+}
