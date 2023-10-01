@@ -5,11 +5,10 @@ import { sendMessageSchema } from "@/lib/validation/send-message";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { OpenAIEmbeddings } from "langchain/embeddings/openai";
 import { PineconeStore } from "langchain/vectorstores/pinecone";
-import { NextResponse } from "next/server";
-import { z } from "zod";
+import { NextRequest } from "next/server";
 import { OpenAIStream, StreamingTextResponse } from "ai";
 
-export async function POST(req: NextResponse) {
+export async function POST(req: NextRequest) {
     const body = await req.json();
     const user = getKindeServerSession().getUser();
 
