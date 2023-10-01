@@ -3,10 +3,12 @@ import { redirect } from "next/navigation";
 import trpc from "../trpc/client";
 import prisma from "@/lib/prisma";
 import Dashboard from "./dashboard";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
 
 export default async function DashboardPage() {
     const { getUser } = getKindeServerSession();
     const user = getUser();
+    const subscription = await getUserSubscriptionPlan();
 
     if (!user?.id) return redirect("/auth-callback?origin=/dashboard");
 
@@ -18,5 +20,5 @@ export default async function DashboardPage() {
 
     if (!dbUser) return redirect("/auth-callback?origin=/dashboard");
 
-    return <Dashboard />;
+    return <Dashboard subscription={subscription} />;
 }

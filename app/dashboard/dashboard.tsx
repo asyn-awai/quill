@@ -8,8 +8,13 @@ import { format } from "date-fns";
 import { Ghost, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
 import Link from "next/link";
 import Skeleton from "react-loading-skeleton";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
 
-export default function Dashboard() {
+export default function Dashboard({
+    subscription,
+}: {
+    subscription: Awaited<ReturnType<typeof getUserSubscriptionPlan>>;
+}) {
     const utils = trpc.useContext();
     const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
         null
@@ -34,7 +39,7 @@ export default function Dashboard() {
                 <h1 className="mb-3 font-bold text-5xl text-gray-900">
                     My Files
                 </h1>
-                <UploadButton />
+                <UploadButton isSubscribed={subscription.isSubscribed} />
             </div>
 
             {files?.length ? (

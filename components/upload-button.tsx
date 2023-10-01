@@ -9,8 +9,13 @@ import { Cloud, File, Loader2 } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
 import trpc from "@/app/trpc/client";
 import { useRouter } from "next/navigation";
+import { getUserSubscriptionPlan } from "@/lib/stripe";
 
-export default function UploadButton() {
+export default function UploadButton({
+    isSubscribed,
+}: {
+    isSubscribed: boolean;
+}) {
     const [open, setOpen] = useState(false);
 
     return (
@@ -19,17 +24,20 @@ export default function UploadButton() {
                 <Button size="lg">Upload PDF</Button>
             </DialogTrigger>
             <DialogContent>
-                <UploadDropzone />
+                <UploadDropzone isSubscribed={isSubscribed} />
             </DialogContent>
         </Dialog>
     );
 }
 
-function UploadDropzone() {
+function UploadDropzone({ isSubscribed }: { isSubscribed: boolean }) {
     const router = useRouter();
     const [uploading, setUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
-    const { startUpload } = useUploadThing("pdfUploader");
+
+    const { startUpload } = useUploadThing(
+        isSubscribed ? "proPlanUploader" : "freePlanUploader"
+    );
 
     const { mutate: startPolling } = trpc.getFile.useMutation({
         onSuccess: ({ id }) => {
@@ -115,7 +123,7 @@ function UploadDropzone() {
                                     or drag and drop
                                 </p>
                                 <p className="text-sm text-zinc-500">
-                                    PDF (up to 4MB)
+                                    PDF (up to {isSubscribed ? 16 : 4}MB)
                                 </p>
                             </div>
 
