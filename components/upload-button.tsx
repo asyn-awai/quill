@@ -5,7 +5,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Dropzone from "react-dropzone";
-import { Cloud, File } from "lucide-react";
+import { Cloud, File, Loader2 } from "lucide-react";
 import { useUploadThing } from "@/lib/uploadthing";
 import trpc from "@/app/trpc/client";
 import { useRouter } from "next/navigation";
@@ -56,7 +56,8 @@ function UploadDropzone() {
     const handleDrop = async <T extends File>(acceptedFile: T[]) => {
         setUploading(() => true);
         const progressInterval = startSimulatedProgress();
-        const res = await startUpload(acceptedFile);
+        console.log(acceptedFile);
+        const res = await startUpload([acceptedFile[0]]);
         const { toast } = await import("@/components/ui/use-toast");
 
         if (!res) {
@@ -98,6 +99,7 @@ function UploadDropzone() {
                 >
                     <div className="flex items-center justify-center h-full w-full">
                         <label
+                            onClick={e => e.stopPropagation()}
                             htmlFor="dropzone-file"
                             className="flex flex-col items-center justify-center w-full h-full rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
                         >
@@ -117,7 +119,9 @@ function UploadDropzone() {
                                 </p>
                             </div>
 
-                            {acceptedFiles && acceptedFiles[0] && uploading ? (
+                            {acceptedFiles &&
+                            acceptedFiles[0] &&
+                            (uploading || uploadProgress === 100) ? (
                                 <div className="max-w-xs bg-white flex items-center rounded-md overflow-hidden outline outline-[1px] outline-zinc-200 divide-x divide-zinc-200">
                                     <div className="px-3 py-2 h-full grid place-items-center">
                                         <File
@@ -131,12 +135,26 @@ function UploadDropzone() {
                                 </div>
                             ) : null}
 
-                            {uploading ? (
+                            {uploading || uploadProgress === 100 ? (
                                 <div className="w-full mt-4 max-w-xs mx-auto">
                                     <Progress
+                                        indicatorColor={
+                                            uploadProgress === 100
+                                                ? "bg-green-500"
+                                                : "bg-primary"
+                                        }
                                         value={uploadProgress}
-                                        className="h-1 w-full bg-zinc-200"
+                                        className="h-1 w-full bg-zinc-200 transition-colors"
                                     />
+                                    {uploadProgress === 100 ? (
+                                        <div className="items-center justify-center text-sm text-zinc-700 text-center pt-2 flex gap-1">
+                                            <Loader2
+                                                className="animate-spin"
+                                                size={24}
+                                            />
+                                            Redirecting...
+                                        </div>
+                                    ) : null}
                                 </div>
                             ) : null}
 
