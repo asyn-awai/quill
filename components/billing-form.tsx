@@ -48,8 +48,9 @@ export default function BillingForm({
                     <CardHeader>
                         <CardTitle>Subscription Plan</CardTitle>
                         <CardDescription>
-                            You are currently on the
-                            <strong>{subscriptionPlan.name}</strong> plan.
+                            You are currently on the{" "}
+                            <strong>{subscriptionPlan.name ?? "Free"}</strong>{" "}
+                            plan.
                         </CardDescription>
                     </CardHeader>
                     <CardFooter className="flex flex-col items-start gap-y-2 md:flex-row md:justify-between md:gap-x-0">

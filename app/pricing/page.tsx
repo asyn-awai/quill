@@ -171,9 +171,9 @@ export default function Pricing() {
                                                             <div className="flex items-center gap-x-1">
                                                                 <p
                                                                     className={cn(
-                                                                        "text-gray-400",
+                                                                        "text-gray-600",
                                                                         {
-                                                                            "text-gray-600":
+                                                                            "text-gray-400":
                                                                                 negative,
                                                                         }
                                                                     )}
@@ -203,9 +203,9 @@ export default function Pricing() {
                                                         ) : (
                                                             <p
                                                                 className={cn(
-                                                                    "text-gray-400",
+                                                                    "text-gray-600",
                                                                     {
-                                                                        "text-gray-600":
+                                                                        "text-gray-400":
                                                                             negative,
                                                                     }
                                                                 )}
