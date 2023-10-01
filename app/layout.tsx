@@ -7,6 +7,7 @@ import Navbar from "@/components/navbar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "@/components/ui/toaster";
 import { constructMetadata } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
                         inter.className
                     )}
                 >
+                    <Analytics />
                     <Navbar />
                     <Toaster />
                     {children}
